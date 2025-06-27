@@ -1,0 +1,570 @@
+.excel-to-json-viewer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* アップロードセクション */
+.upload-section {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.upload-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.file-upload-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: #007acc;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.file-label:hover {
+  background: #005a9f;
+}
+
+.file-name {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+  background: #f0f8ff;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #b3d9ff;
+}
+
+.reset-button {
+  padding: 10px 16px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.reset-button:hover {
+  background: #5a6268;
+}
+
+/* ローディング */
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e9ecef;
+  border-top: 2px solid #007acc;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* エラー表示 */
+.error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #fff5f5;
+  border: 1px solid #fed7d7;
+  border-radius: 6px;
+  color: #c53030;
+}
+
+.error-icon {
+  font-size: 18px;
+}
+
+.error-message {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* JSON サマリー */
+.json-summary {
+  margin-top: 20px;
+  border-top: 1px solid #e9ecef;
+  padding-top: 20px;
+}
+
+.json-summary h3 {
+  margin: 0 0 16px 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.summary-label {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.summary-value {
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+}
+
+/* JSON出力セクション */
+.json-output-section {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 100%;
+}
+
+.output-controls {
+  padding: 20px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.output-controls h3 {
+  margin: 0 0 16px 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.control-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.toggle-button,
+.copy-button,
+.download-button,
+.data-mode-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.data-mode-button {
+  background: #fd7e14;
+  color: white;
+}
+
+.data-mode-button:hover {
+  background: #e8680a;
+}
+
+.data-mode-button.active {
+  background: #d63384;
+}
+
+.data-mode-button.active:hover {
+  background: #b02a5b;
+}
+
+.toggle-button {
+  background: #17a2b8;
+  color: white;
+}
+
+.toggle-button:hover {
+  background: #138496;
+}
+
+.copy-button {
+  background: #28a745;
+  color: white;
+}
+
+.copy-button:hover {
+  background: #218838;
+}
+
+.copy-button.success {
+  background: #155724;
+}
+
+.download-button {
+  background: #6f42c1;
+  color: white;
+}
+
+.download-button:hover {
+  background: #5a2d91;
+}
+
+/* RAW JSON表示 */
+.json-raw-output {
+  max-height: 70vh;
+  overflow: hidden;
+  border: 1px solid #e9ecef;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.json-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #2d3748;
+  border-bottom: 1px solid #4a5568;
+  color: white;
+  font-size: 12px;
+}
+
+.json-controls-left {
+  display: flex;
+  gap: 16px;
+}
+
+.json-controls-right {
+  display: flex;
+  gap: 8px;
+}
+
+.json-size-info,
+.json-lines-info {
+  color: #a0aec0;
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
+}
+
+.json-scroll-top {
+  background: #4299e1;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: background-color 0.2s;
+}
+
+.json-scroll-top:hover {
+  background: #3182ce;
+}
+
+.json-content {
+  margin: 0;
+  padding: 20px;
+  background: #1a202c;
+  font-family: "Fira Code", "Consolas", "Monaco", "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #e2e8f0;
+  white-space: pre-wrap;
+  word-break: break-all;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: auto;
+  flex: 1;
+}
+
+.json-content.highlighted {
+  color: #e2e8f0;
+}
+
+/* JSONシンタックスハイライト */
+.json-content .json-key {
+  color: #81e6d9;
+  font-weight: 500;
+}
+
+.json-content .json-string {
+  color: #f6e05e;
+}
+
+.json-content .json-number {
+  color: #fc8181;
+  font-weight: 500;
+}
+
+.json-content .json-boolean {
+  color: #9f7aea;
+  font-weight: 600;
+}
+
+.json-content .json-null {
+  color: #a0aec0;
+  font-style: italic;
+}
+
+.json-content .json-bracket {
+  color: #68d391;
+  font-weight: bold;
+}
+
+/* 構造化JSON表示 */
+.json-structured-output {
+  padding: 20px;
+  max-height: 70vh;
+  overflow: auto;
+  width: 100%;
+}
+
+.json-structure {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.structure-section h4 {
+  margin: 0 0 12px 0;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+  border-bottom: 2px solid #007acc;
+  padding-bottom: 4px;
+}
+
+/* シート一覧 */
+.sheets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sheet-item {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.sheet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.sheet-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.sheet-size {
+  font-size: 14px;
+  color: #666;
+  background: #e9ecef;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.sheet-details {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.detail-item {
+  font-size: 14px;
+  color: #666;
+  background: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+}
+
+/* プロパティ一覧 */
+.properties-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+}
+
+.property-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+}
+
+.property-key {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+
+.property-type {
+  font-size: 12px;
+  color: #666;
+  background: #e9ecef;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .excel-to-json-viewer {
+    padding: 12px;
+  }
+
+  .upload-section {
+    max-width: none;
+    margin: 0;
+  }
+
+  .upload-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .file-upload-group {
+    justify-content: center;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .control-buttons {
+    justify-content: center;
+  }
+
+  .properties-list {
+    grid-template-columns: 1fr;
+  }
+
+  .sheet-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .sheet-details {
+    justify-content: center;
+  }
+
+  .json-raw-output {
+    max-height: 50vh;
+  }
+
+  .json-structured-output {
+    max-height: 50vh;
+  }
+
+  .json-content {
+    font-size: 11px;
+    padding: 15px;
+  }
+
+  .json-controls {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
+  .json-controls-left {
+    gap: 12px;
+  }
+}
+
+/* スクロールバーのスタイル */
+.json-raw-output::-webkit-scrollbar,
+.json-structured-output::-webkit-scrollbar,
+.json-content::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.json-raw-output::-webkit-scrollbar-track,
+.json-structured-output::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.json-content::-webkit-scrollbar-track {
+  background: #2d3748;
+}
+
+.json-raw-output::-webkit-scrollbar-thumb,
+.json-structured-output::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 6px;
+}
+
+.json-content::-webkit-scrollbar-thumb {
+  background: #4a5568;
+  border-radius: 6px;
+}
+
+.json-raw-output::-webkit-scrollbar-thumb:hover,
+.json-structured-output::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.json-content::-webkit-scrollbar-thumb:hover {
+  background: #718096;
+}
