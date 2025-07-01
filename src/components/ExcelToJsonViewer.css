@@ -199,6 +199,41 @@
   flex-wrap: wrap;
 }
 
+.control-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  background: #007acc;
+  color: white;
+}
+
+.control-button:hover {
+  background: #005a9f;
+}
+
+.control-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #6c757d !important;
+}
+
+.control-button:disabled:hover {
+  background: #6c757d !important;
+}
+
+.control-button.success {
+  background: #28a745;
+  color: white;
+}
+
+.control-button.success:hover {
+  background: #218838;
+}
+
 .toggle-button,
 .copy-button,
 .download-button,

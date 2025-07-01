@@ -2,14 +2,13 @@
   "name": "spreadjs-excel-viewer",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://skc-shibu.github.io/excel-preview",
   "dependencies": {
+    "@grapecity/spread-excelio": "^16.0.6",
+    "@grapecity/spread-sheets": "^16.0.6",
+    "@grapecity/spread-sheets-react": "^16.0.6",
     "@types/node": "^16.18.68",
     "@types/react": "^18.2.42",
     "@types/react-dom": "^18.2.17",
-    "@grapecity/spread-sheets": "^16.0.6",
-    "@grapecity/spread-sheets-react": "^16.0.6",
-    "@grapecity/spread-excelio": "^16.0.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
@@ -20,9 +19,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -43,7 +40,6 @@
     ]
   },
   "devDependencies": {
-    "@types/jest": "^27.5.2",
-    "gh-pages": "^6.1.1"
+    "@types/jest": "^27.5.2"
   }
 }
