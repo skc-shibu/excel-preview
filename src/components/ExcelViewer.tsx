@@ -56,13 +56,34 @@ const ExcelViewer: React.FC = () => {
 
   /// SpreadSheetsの初期化完了時の処理
   const onWorkbookInitialized = (spread: GC.Spread.Sheets.Workbook) => {
-    spreadRef.current = spread;
-    // スプレッドシートの基本設定
-    spread.suspendPaint();
-    spread.options.tabStripVisible = true;
-    spread.options.newTabVisible = false;
-    spread.options.tabNavigationVisible = true;
-    spread.resumePaint();
+    try {
+      spreadRef.current = spread;
+
+      // スプレッドシートの基本設定
+      spread.suspendPaint();
+
+      // オプション設定を安全に適用
+      if (spread.options) {
+        spread.options.tabStripVisible = true;
+        spread.options.newTabVisible = false;
+        spread.options.tabNavigationVisible = true;
+      }
+
+      // デフォルトシートが存在するか確認
+      if (spread.getSheetCount() === 0) {
+        spread.addSheet(0, new GC.Spread.Sheets.Worksheet("Sheet1"));
+      }
+
+      spread.resumePaint();
+    } catch (error) {
+      console.error("SpreadSheets initialization error:", error);
+      setErrorInfo(
+        "スプレッドシートの初期化に失敗しました",
+        "unknown",
+        error instanceof Error ? error.message : "初期化エラー",
+        ["ページを再読み込みしてください"]
+      );
+    }
   };
 
   /// エラー設定のヘルパー関数
@@ -229,8 +250,38 @@ const ExcelViewer: React.FC = () => {
     setShowErrorDetails(false);
     setIsFullscreen(false);
     if (spreadRef.current) {
-      spreadRef.current.clearSheets();
-      spreadRef.current.addSheet(0);
+      try {
+        // 全てのシートをクリア
+        const sheetCount = spreadRef.current.getSheetCount();
+        for (let i = sheetCount - 1; i >= 0; i--) {
+          if (sheetCount > 1 || i > 0) {
+            spreadRef.current.removeSheet(i);
+          }
+        }
+
+        // デフォルトシートが存在しない場合のみ新しいシートを追加
+        if (spreadRef.current.getSheetCount() === 0) {
+          spreadRef.current.addSheet(
+            0,
+            new GC.Spread.Sheets.Worksheet("Sheet1")
+          );
+        } else {
+          // 既存のシートをクリア
+          const sheet = spreadRef.current.getActiveSheet();
+          sheet.clear(
+            0,
+            0,
+            sheet.getRowCount(),
+            sheet.getColumnCount(),
+            GC.Spread.Sheets.SheetArea.viewport,
+            GC.Spread.Sheets.StorageType.data
+          );
+        }
+      } catch (error) {
+        console.warn("Reset operation error:", error);
+        // エラーが発生した場合は新しいワークブックを作成
+        spreadRef.current.fromJSON({});
+      }
     }
   };
 
@@ -382,9 +433,7 @@ const ExcelViewer: React.FC = () => {
             border: "1px solid #ccc",
             borderRadius: isFullscreen ? "0" : "4px",
           }}
-        >
-          <Worksheet />
-        </SpreadSheets>
+        />
       </div>
 
       {isFullscreen && (
