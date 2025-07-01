@@ -9,6 +9,13 @@
 - 📱 **レスポンシブデザイン**: モバイルデバイスにも対応
 - ⚡ **高速処理**: クライアントサイドでのファイル処理
 - 🔒 **プライベート**: ファイルはローカルで処理され、サーバーに送信されません
+- 🌐 **GitHub Pages 対応**: オンラインで直接利用可能
+- 🔧 **JSON 変換**: Excel ファイルを JSON 形式で出力・確認可能
+- 📊 **差分比較**: 2 つの Excel ファイルの差分を視覚的に表示
+
+## ライブデモ
+
+🌐 **[デモサイトを見る](https://skc-shibu.github.io/excel-preview)**
 
 ## 技術スタック
 
@@ -39,6 +46,45 @@ npm start
 npm run build
 ```
 
+### 4. GitHub Pages デプロイ
+
+#### 初回設定
+
+1. **`package.json`の`homepage`を確認**
+
+   ```json
+   "homepage": "https://skc-shibu.github.io/excel-preview"
+   ```
+
+   ✅ 既に設定済みです！
+
+2. **必要なパッケージをインストール**
+
+   ```bash
+   npm install
+   ```
+
+#### デプロイ実行
+
+```bash
+npm run deploy
+```
+
+このコマンドにより、以下の処理が自動実行されます：
+
+- アプリケーションのビルド（`npm run build`）
+- `gh-pages`ブランチの作成・更新
+- GitHub Pages への公開
+
+#### GitHub リポジトリでの設定
+
+1. GitHub リポジトリの **Settings** → **Pages** に移動
+2. **Source** を **Deploy from a branch** に設定
+3. **Branch** を **gh-pages** に設定
+4. **Save** をクリック
+
+数分後、指定した URL でアプリケーションが利用できるようになります。
+
 ## 使用方法
 
 1. **ファイル選択**: 「📁 Excel ファイルを選択」ボタンをクリックして、Excel ファイルを選択します
@@ -57,12 +103,20 @@ npm run build
 ```
 src/
 ├── components/
-│   ├── ExcelViewer.tsx    # メインのビューアコンポーネント
-│   └── ExcelViewer.css    # ビューアのスタイル
-├── App.tsx                # アプリケーションのルートコンポーネント
-├── App.css                # アプリケーションのスタイル
-├── index.tsx              # エントリーポイント
-└── index.css              # グローバルスタイル
+│   ├── ExcelViewer.tsx        # メインのビューアコンポーネント
+│   ├── ExcelViewer.css        # ビューアのスタイル
+│   ├── ExcelDiffViewer.tsx    # Excel差分比較コンポーネント
+│   ├── ExcelDiffViewer.css    # 差分比較のスタイル
+│   ├── ExcelToJsonViewer.tsx  # JSON変換コンポーネント
+│   └── ExcelToJsonViewer.css  # JSON変換のスタイル
+├── types/
+│   └── diff.ts                # 差分比較の型定義
+├── utils/
+│   └── excelDiffUtils.ts      # 差分比較のユーティリティ
+├── App.tsx                    # アプリケーションのルートコンポーネント
+├── App.css                    # アプリケーションのスタイル
+├── index.tsx                  # エントリーポイント
+└── index.css                  # グローバルスタイル
 ```
 
 ## 注意事項

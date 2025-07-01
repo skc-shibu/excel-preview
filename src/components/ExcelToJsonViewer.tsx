@@ -6,6 +6,7 @@ import "./ExcelToJsonViewer.css";
 const ExcelToJsonViewer: React.FC = () => {
   const [fileName, setFileName] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [jsonData, setJsonData] = useState<any>(null);
   const [jsonString, setJsonString] = useState<string>("");
@@ -121,7 +122,7 @@ const ExcelToJsonViewer: React.FC = () => {
   };
 
   /// データ表示モードの切り替え
-  const toggleDataOnlyMode = () => {
+  const toggleDataOnlyMode = async () => {
     const newShowDataOnly = !showDataOnly;
 
     // データのみモードにしようとしているが、sheetsが配列でない場合はエラーを表示
@@ -135,10 +136,39 @@ const ExcelToJsonViewer: React.FC = () => {
       return;
     }
 
-    setShowDataOnly(newShowDataOnly);
+    setIsProcessing(true);
     setError(""); // エラーをクリア
-    if (jsonData) {
-      updateJsonString(jsonData, newShowDataOnly);
+
+    try {
+      // 処理を非同期化して、UI更新の時間を確保
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      setShowDataOnly(newShowDataOnly);
+      if (jsonData) {
+        updateJsonString(jsonData, newShowDataOnly);
+      }
+    } catch (error) {
+      console.error("データモード切り替えエラー:", error);
+      setError("データモードの切り替えに失敗しました");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  /// RAW表示/構造表示の切り替え
+  const toggleRawJsonDisplay = async () => {
+    setIsProcessing(true);
+
+    try {
+      // 大きなJSONデータの場合、ハイライト処理に時間がかかる可能性があるため非同期処理
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      setShowRawJson(!showRawJson);
+    } catch (error) {
+      console.error("表示モード切り替えエラー:", error);
+      setError("表示モードの切り替えに失敗しました");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -208,6 +238,7 @@ const ExcelToJsonViewer: React.FC = () => {
     setShowRawJson(false);
     setCopySuccess(false);
     setShowDataOnly(false);
+    setIsProcessing(false);
   };
 
   /// JSONデータの概要情報を取得
@@ -368,20 +399,31 @@ const ExcelToJsonViewer: React.FC = () => {
                 onClick={toggleDataOnlyMode}
                 className={`data-mode-button ${showDataOnly ? "active" : ""}`}
                 type="button"
+                disabled={isProcessing}
               >
-                {showDataOnly ? "🗂️ 全体表示" : "📊 データのみ"}
+                {isProcessing
+                  ? "⏳ 切り替え中..."
+                  : showDataOnly
+                  ? "🗂️ 全体表示"
+                  : "📊 データのみ"}
               </button>
               <button
-                onClick={() => setShowRawJson(!showRawJson)}
+                onClick={toggleRawJsonDisplay}
                 className="toggle-button"
                 type="button"
+                disabled={isProcessing}
               >
-                {showRawJson ? "📋 構造表示" : "📄 RAW表示"}
+                {isProcessing
+                  ? "⏳ 切り替え中..."
+                  : showRawJson
+                  ? "📋 構造表示"
+                  : "📄 RAW表示"}
               </button>
               <button
                 onClick={copyToClipboard}
                 className={`copy-button ${copySuccess ? "success" : ""}`}
                 type="button"
+                disabled={isProcessing}
               >
                 {copySuccess ? "✅ コピー完了" : "📋 コピー"}
               </button>
@@ -389,6 +431,7 @@ const ExcelToJsonViewer: React.FC = () => {
                 onClick={downloadJson}
                 className="download-button"
                 type="button"
+                disabled={isProcessing}
               >
                 💾 ダウンロード
               </button>

@@ -177,6 +177,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   width: 100%;
+  text-align: left;
 }
 
 .output-controls {
@@ -228,6 +229,22 @@
   background: #b02a5b;
 }
 
+.data-mode-button:disabled,
+.toggle-button:disabled,
+.copy-button:disabled,
+.download-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #6c757d !important;
+}
+
+.data-mode-button:disabled:hover,
+.toggle-button:disabled:hover,
+.copy-button:disabled:hover,
+.download-button:disabled:hover {
+  background: #6c757d !important;
+}
+
 .toggle-button {
   background: #17a2b8;
   color: white;
@@ -267,6 +284,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  text-align: left;
 }
 
 .json-controls {
@@ -325,6 +343,7 @@
   box-sizing: border-box;
   overflow: auto;
   flex: 1;
+  text-align: left;
 }
 
 .json-content.highlighted {
@@ -367,6 +386,7 @@
   max-height: 70vh;
   overflow: auto;
   width: 100%;
+  text-align: left;
 }
 
 .json-structure {
