@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { SpreadSheets, Worksheet } from "@grapecity/spread-sheets-react";
+import { SpreadSheets } from "@grapecity/spread-sheets-react";
 import * as GC from "@grapecity/spread-sheets";
 import * as ExcelIO from "@grapecity/spread-excelio";
+
 import "./ExcelViewer.css";
 
 /// エラー情報の型定義
@@ -19,6 +20,7 @@ const ExcelViewer: React.FC = () => {
   const [error, setError] = useState<ErrorInfo | null>(null);
   const [showErrorDetails, setShowErrorDetails] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [inputResetKey, setInputResetKey] = useState<number>(0);
   const spreadRef = useRef<GC.Spread.Sheets.Workbook | null>(null);
 
   /// ESCキーでの全画面解除
@@ -249,6 +251,7 @@ const ExcelViewer: React.FC = () => {
     setError(null);
     setShowErrorDetails(false);
     setIsFullscreen(false);
+    setInputResetKey((prev) => prev + 1);
     if (spreadRef.current) {
       try {
         // 全てのシートをクリア
@@ -315,6 +318,7 @@ const ExcelViewer: React.FC = () => {
         <div className="upload-section">
           <div className="upload-controls">
             <input
+              key={inputResetKey}
               type="file"
               id="file-input"
               accept=".xlsx,.xls,.csv"

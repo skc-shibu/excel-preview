@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import "./App.css";
 import ExcelViewer from "./components/ExcelViewer";
-import ExcelDiffViewer from "./components/ExcelDiffViewer";
 import ExcelToJsonViewer from "./components/ExcelToJsonViewer";
 
 /// アプリケーションのモード定義
-type AppMode = "viewer" | "diff" | "json";
+type AppMode = "viewer" | "json";
 
 /// Appコンポーネント - アプリケーションのメインコンポーネント
 const App: React.FC = () => {
@@ -16,8 +15,6 @@ const App: React.FC = () => {
     switch (mode) {
       case "viewer":
         return <ExcelViewer />;
-      case "diff":
-        return <ExcelDiffViewer />;
       case "json":
         return <ExcelToJsonViewer />;
       default:
@@ -38,13 +35,6 @@ const App: React.FC = () => {
             type="button"
           >
             📊 通常表示
-          </button>
-          <button
-            className={`mode-button ${mode === "diff" ? "active" : ""}`}
-            onClick={() => setMode("diff")}
-            type="button"
-          >
-            🔍 差分比較
           </button>
           <button
             className={`mode-button ${mode === "json" ? "active" : ""}`}
