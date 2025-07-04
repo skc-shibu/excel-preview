@@ -181,6 +181,15 @@ const ExcelViewer: React.FC = () => {
 
             try {
               spreadRef.current!.fromJSON(json);
+
+              // A1セルの値を取得してコンソールに出力
+              const sheet = spreadRef.current!.getActiveSheet();
+              if (sheet) {
+                const textValue = sheet.getText(0, 0); // A1セルのテキストを取得
+                const valueValue = sheet.getValue(0, 0); // A1セルの値を取得
+                console.log("A1 (getText):", textValue);
+                console.log("A1 (getValue):", valueValue);
+              }
               resolve();
             } catch (error) {
               reject(error);

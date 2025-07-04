@@ -5,6 +5,7 @@ import React, {
   useEffect,
 } from "react";
 import * as ExcelIO from "@grapecity/spread-excelio";
+import * as GC from "@grapecity/spread-sheets";
 import { diffLines } from "diff";
 import "./ExcelToJsonViewer.css";
 
@@ -44,6 +45,40 @@ interface LineDiff {
   right: string;
   type: "added" | "removed" | "unchanged";
 }
+
+/// richText プロパティを持つセルに text プロパティを強制的に追加するヘルパー関数
+const addTextPropertyFromRichText = (json: any) => {
+  if (!json || !json.sheets || typeof json.sheets !== "object") {
+    return;
+  }
+
+  for (const sheetName in json.sheets) {
+    if (Object.prototype.hasOwnProperty.call(json.sheets, sheetName)) {
+      const sheet = json.sheets[sheetName];
+      if (sheet && sheet.data && sheet.data.dataTable) {
+        for (const row in sheet.data.dataTable) {
+          if (Object.prototype.hasOwnProperty.call(sheet.data.dataTable, row)) {
+            const rowData = sheet.data.dataTable[row];
+            for (const col in rowData) {
+              if (Object.prototype.hasOwnProperty.call(rowData, col)) {
+                const cell = rowData[col];
+                // richText が存在し、かつ text が存在しない場合に処理
+                if (cell && cell.richText && typeof cell.text === "undefined") {
+                  // richText の textRuns からプレーンテキストを生成
+                  if (Array.isArray(cell.richText.textRuns)) {
+                    cell.text = cell.richText.textRuns
+                      .map((run: any) => run.text)
+                      .join("");
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+};
 
 /**
  * 2つのJSONオブジェクトを再帰的に比較し、差分を検出します。
@@ -335,10 +370,15 @@ const ExcelToJsonViewer: React.FC = () => {
             }
 
             try {
+              const spread = new GC.Spread.Sheets.Workbook();
+              spread.fromJSON(json);
+              const jsonWithText = spread.toJSON({ saveAsView: true });
+              addTextPropertyFromRichText(jsonWithText);
+
               // JSONデータを保存
-              setJsonData(json);
+              setJsonData(jsonWithText);
               // 見やすい形式でJSONを文字列化（初期読み込み時は常にtrue）
-              updateJsonString(json, true);
+              updateJsonString(jsonWithText, true);
               resolve();
             } catch (error) {
               reject(error);
@@ -379,18 +419,23 @@ const ExcelToJsonViewer: React.FC = () => {
             }
 
             try {
+              const spread = new GC.Spread.Sheets.Workbook();
+              spread.fromJSON(json);
+              const jsonWithText = spread.toJSON({ saveAsView: true });
+              addTextPropertyFromRichText(jsonWithText);
+
               // ファイル番号に応じてデータを保存
               if (fileNumber === 1) {
-                setJsonData1(json);
+                setJsonData1(jsonWithText);
                 updateJsonStringForDiff(
-                  json,
+                  jsonWithText,
                   1,
                   diffOptions.compareMode === "sheets_only"
                 );
               } else {
-                setJsonData2(json);
+                setJsonData2(jsonWithText);
                 updateJsonStringForDiff(
-                  json,
+                  jsonWithText,
                   2,
                   diffOptions.compareMode === "sheets_only"
                 );
